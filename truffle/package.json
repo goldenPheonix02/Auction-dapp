@@ -6,6 +6,10 @@
     "test": "truffle test"
   },
   "dependencies": {
-    "@truffle/hdwallet-provider": "^2.1.7"
+    "@truffle/hdwallet-provider": "^2.1.7",
+    "ganache": "^7.9.1",
+    "ganache-cli": "^6.12.2",
+    "solc": "^0.8.13",
+    "web3": "^4.2.0"
   }
 }
