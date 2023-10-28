@@ -1,11 +1,15 @@
-const contractAddress = "0x2aD2d59A71980D5E9FC545B096699cFf66038bA0";
-const compiledContract = require("../../client/src/contracts/MyAuction.json");
 const web3 = require("./web3");
-
+const moment = require("moment");
 const auctionLogic = {};
+const compiledContract = require("../build/Auction.json");
 
 const getContractObject = async () => {
-  const obj = new web3.eth.Contract(compiledContract.abi, contractAddress);
+  const contractReceipt = require("./receipt-ganache.json");
+
+  const obj = new web3.eth.Contract(
+    compiledContract.abi,
+    contractReceipt.address
+  );
   const accts = await web3.eth.getAccounts();
   return { contractObj: obj, accts };
 };
@@ -20,6 +24,7 @@ auctionLogic.bid = async (req, res) => {
       gas: 1000000,
     });
   } catch (err) {
+    console.log(err);
     return res.status(501).send({ err: err.innerError.message });
   }
   if (result.status == BigInt(1)) res.send({ status: "successffully bid" });
@@ -29,7 +34,9 @@ auctionLogic.getHighest = async (req, res) => {
   const { contractObj, accts } = await getContractObject();
   const highestBid = parseInt(await contractObj.methods.highestBid().call());
   const highestBidder = await contractObj.methods.highestBidder().call();
-  res.send({ highestBid, highestBidder });
+  const owner = await contractObj.methods.getOwner().call();
+  console.log(highestBid, highestBidder);
+  res.send({ highestBid, highestBidder, owner });
 };
 
 auctionLogic.cancelAuction = async (req, res) => {
@@ -39,10 +46,20 @@ auctionLogic.cancelAuction = async (req, res) => {
       .destructAuction()
       .call({ from: req.body.account });
   } catch (err) {
+    console.log(err);
     return res.status(501).send({ err: err.innerError.message });
   }
   res.send("Auction cancelled successfully");
 };
+
+function format_time(s) {
+  const dtFormat = new Intl.DateTimeFormat("en-GB", {
+    timeStyle: "medium",
+    timeZone: "UTC",
+  });
+
+  return dtFormat.format(new Date(s * 1e3));
+}
 
 auctionLogic.getTime = async (req, res) => {
   const { contractObj, accts } = await getContractObject();
@@ -50,7 +67,13 @@ auctionLogic.getTime = async (req, res) => {
   var endTime = await contractObj.methods.auction_end().call();
   startTime = startTime.toString();
   endTime = endTime.toString();
-  res.send({ startTime, endTime });
+  res.send({
+    startTime: moment.unix(startTime).format("LLL"),
+    endTime: moment.unix(endTime).format("LLL"),
+  });
 };
+
+auctionLogic.getAccounts = async (req, res) =>
+  res.send({ accounts: await web3.eth.getAccounts() });
 
 module.exports = auctionLogic;
