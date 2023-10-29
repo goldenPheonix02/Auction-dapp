@@ -33,6 +33,7 @@ auctionLogic.bid = async (req, res) => {
     console.log(err);
     return res.status(501).send({ err: err?.innerError?.message });
   }
+  console.log("Bidding done successfully from accounts", req.body.account);
   if (result.status == BigInt(1)) res.send({ status: "successfully bid" });
 };
 
@@ -75,6 +76,7 @@ auctionLogic.cancelAuction = async (req, res) => {
     console.log(err);
     return res.status(501).send({ err: err.innerError.message });
   }
+  console.log("Auction cancelled successfully");
   res.send("Auction cancelled successfully");
 };
 

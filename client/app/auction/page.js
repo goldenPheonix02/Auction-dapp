@@ -26,7 +26,7 @@ export default () => {
   const [time, settime] = useState({ t1: 0, t2: 0 });
   const [info, setinfo] = useState({ brand: "-", rnumber: "-" });
   const [value, setvalue] = useState(0);
-  const [data, setdata] = useState({ brand: "Jai", rn: "1000", duration: 0 });
+  const [data, setdata] = useState({ brand: "", rn: "", duration: "" });
   const [high, sethigh] = useState({ h1: "-", h2: "-", owner: "-" });
   const getHighest = async () => {
     axios.get("http://localhost:4000/api/highest").then(({ data }) => {
