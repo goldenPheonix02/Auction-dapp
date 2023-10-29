@@ -1,6 +1,8 @@
 # using node alpine as base image
 FROM node:18.16.0-alpine
-
+# 
+# RUN echo "Asia/Kolkata" > /etc/timezone
+# RUN  dpkg-reconfigure -f noninteractive tzdata
 # working dir ./app
 WORKDIR /app
 
@@ -15,6 +17,7 @@ COPY ./package.json .
 
 # Install the dependencies
 RUN npm install
+
 
 # Copy the server and ethereum module
 COPY . .

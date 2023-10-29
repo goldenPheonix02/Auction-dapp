@@ -38,11 +38,12 @@ const compile = () => {
 
     // Create the build folder if it not exist
     fs.ensureDirSync(buildPath);
-    console.log(output);
+    // console.log(output);
 
     // Save the output in json format
     fs.outputJSONSync(path.resolve(buildPath, "Auction" + ".json"), output);
 
+    console.log("Contract compiled successfully");
     return "Contract compiled successfully!";
   } catch (error) {
     console.error(error);
