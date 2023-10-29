@@ -15,8 +15,6 @@ COPY . .
 
 CMD ["npm", "run", "dev"]
 
-EXPOSE 3000
-
 # default command
 # RUN npm run build
 

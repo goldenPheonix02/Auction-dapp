@@ -6,18 +6,16 @@ FROM node:18.16.0-alpine
 # working dir ./app
 WORKDIR /app
 
+COPY ./package.json .
 # Install the prerequisites to install the web3 and other ethereum npm packages
-RUN apk update && apk upgrade && apk add bash git openssh
 # RUN apk add --update py-pip krb5 krb5-libs gcc make g++ krb5-dev
 
 # RUN git config --global url."https://".insteadOf git://
 
+RUN apk update && apk upgrade && apk add bash git openssh && npm install
 # Copy the package.json
-COPY ./package.json .
 
 # Install the dependencies
-RUN npm install
-
 
 # Copy the server and ethereum module
 COPY . .
